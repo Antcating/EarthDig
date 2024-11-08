@@ -26,6 +26,7 @@ func _ready():
 			if noise.get_noise_2d(i, j) > 0.33:
 				set_cell(Vector2i(i, j), 0, Vector2i(18, 7), 0)
 			else:
+				
 				set_cell(Vector2i(i, j), 0, Vector2i(15, 7), 0)
 	
 	pass # Replace with function body.

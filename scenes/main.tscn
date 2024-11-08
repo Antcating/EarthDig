@@ -173,3 +173,5 @@ script = ExtResource("2_gfeth")
 visible = false
 position = Vector2(561, 313)
 texture = ExtResource("3_lnda1")
+
+[node name="Background" type="TileMapLayer" parent="TileMapLayer"]

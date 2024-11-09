@@ -11,4 +11,4 @@ func _process(delta):
 	if Input.is_action_just_released("show_debug"):
 		set_visibility_layer(!get_visibility_layer())
 	if get_visibility_layer():
-		set_text("FPS %d" % Engine.get_frames_per_second())
+		set_text("FPS %d\nVersion %s" % [Engine.get_frames_per_second(), Engine.get_version_info()])

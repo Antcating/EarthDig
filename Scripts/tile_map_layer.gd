@@ -2,6 +2,7 @@ extends TileMapLayer
 
 var seed = 3
 @onready var background = $ParallaxBackground/ParallaxLayer/Background
+var map: Array[Array]
 
 func weight(h, h_min, h_max, smooth):
 	# Weighting function for 1D depth based generation
@@ -49,12 +50,12 @@ func generate_noise_map(map):
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var map: Array[Array]
-	for i in range(get_parent().map_width):
+	
+	for i in range(get_parent().map_width + 2):
 		map.append([])
 		for j in range(get_parent().map_height):
 			map[i].append(1)
-	
+		
 	map = generate_noise_map(map)
 	
 	# Cleaning function
@@ -66,8 +67,8 @@ func _ready():
 						map[i][j] = 1
 	
 	# Main drawing cycle 
-	for i in range(get_parent().map_width):
-		for j in range(get_parent().map_height):
+	for j in range(get_parent().map_height):
+		for i in range(get_parent().map_width):
 			if map[i][j] == 1:
 				# Add variation to the ground
 				if randf() > 0.5:
@@ -89,6 +90,17 @@ func _ready():
 #				Depth stone
 				background.set_cell(Vector2i(i, j), 0, Vector2i(9, 1), 0)
 		
+#		Generate level walls
+		set_cell(Vector2i(-1, j), 1, Vector2i(9, 3), 0)
+		set_cell(Vector2i(get_parent().map_width, j), 1, Vector2i(9, 3), 0)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass
+	if Input.is_key_pressed(KEY_1):
+			for i in range(get_parent().map_width):
+				map[i][0] = 0
+				if i > 10 and i < 50:
+					set_cell(Vector2i(i, -1), 0, Vector2i(0, 1), 0)
+					set_cell(Vector2i(i, -2), 0, Vector2i(0, 1), 0)
+				set_cell(Vector2i(i, 0), 0, Vector2i(0, 1), 0)
+	

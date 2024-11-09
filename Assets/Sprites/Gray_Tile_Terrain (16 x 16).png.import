@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b4f8mxnkudj34"
-path="res://.godot/imported/Scaffolding_and_BG_Parts (16 x 16).png-fe1c74ef11b629d7cf301d9b64f4f5b0.ctex"
+uid="uid://6q8688nflmag"
+path="res://.godot/imported/Gray_Tile_Terrain (16 x 16).png-3003134e7cee3babf275507a878fb073.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Scaffolding_and_BG_Parts (16 x 16).png"
-dest_files=["res://.godot/imported/Scaffolding_and_BG_Parts (16 x 16).png-fe1c74ef11b629d7cf301d9b64f4f5b0.ctex"]
+source_file="res://Assets/Sprites/Gray_Tile_Terrain (16 x 16).png"
+dest_files=["res://.godot/imported/Gray_Tile_Terrain (16 x 16).png-3003134e7cee3babf275507a878fb073.ctex"]
 
 [params]
 

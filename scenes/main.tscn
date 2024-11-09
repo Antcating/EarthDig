@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://d1royap0untyy"]
+[gd_scene load_steps=7 format=3 uid="uid://d1royap0untyy"]
 
 [ext_resource type="Texture2D" uid="uid://cr1u088tqiotg" path="res://Assets/Sprites/Brown_Tile_Terrain (16 x 16).png" id="1_xoot3"]
 [ext_resource type="Script" path="res://Scripts/tile_map_layer.gd" id="2_gfeth"]
 [ext_resource type="Texture2D" uid="uid://drjrgqfxrejpe" path="res://icon.svg" id="3_lnda1"]
+[ext_resource type="Script" path="res://scripts/camera_2d.gd" id="4_7al6x"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0du8l"]
 texture = ExtResource("1_xoot3")
@@ -175,3 +176,6 @@ position = Vector2(561, 313)
 texture = ExtResource("3_lnda1")
 
 [node name="Background" type="TileMapLayer" parent="TileMapLayer"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("4_7al6x")

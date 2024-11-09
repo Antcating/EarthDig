@@ -12,3 +12,4 @@ func _process(delta):
 		set_visibility_layer(!get_visibility_layer())
 	if get_visibility_layer():
 		set_text("FPS %d" % Engine.get_frames_per_second())
+		print(get_global_mouse_position())

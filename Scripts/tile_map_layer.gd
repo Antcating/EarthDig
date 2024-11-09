@@ -69,4 +69,5 @@ func _ready():
 				set_cell(Vector2i(i, j), 0, Vector2i(25, 3), 0)
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	
 	pass

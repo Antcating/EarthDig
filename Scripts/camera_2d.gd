@@ -5,22 +5,29 @@ func _ready():
 	pass # Replace with function body.
 
 
-const speed = 1000
+const acc = 1000
+var vel = Vector2i(0, 0)
 
 func _physics_process(delta):
-	var vel = speed * delta
+	
 	if Input.is_key_pressed(KEY_W):
-		position.y -= vel
+		vel[1] -= acc * delta / zoom.x
 		
 	if Input.is_key_pressed(KEY_S):
-		position.y += vel
+		vel[1] += acc * delta / zoom.x
 	
 	if Input.is_key_pressed(KEY_A):
-		position.x -= vel
+		vel[0] -= acc * delta / zoom.x
 	
 	if Input.is_key_pressed(KEY_D):
-		position.x += vel
-		
+		vel[0] += acc * delta / zoom.x
+	
+	
+	vel[0] -= 0.2 * vel[0]
+	vel[1] -= 0.2 * vel[1]
+	
+	position.x += vel[0]
+	position.y += vel[1]
 		
 	
 func _input(event):

@@ -1,6 +1,7 @@
 extends TileMapLayer
 var map_height = 480
-var map_width = 640
+var map_width = 480
+var seed = 3
 
 func weight(h, h_min, h_max, smooth):
 	# Weighting function for 1D depth based generation
@@ -12,28 +13,39 @@ func weight(h, h_min, h_max, smooth):
 	# With leakage 
 	# See graph e^{-\left(\frac{\left(x-a\right)-\frac{\left(b-a\right)}{2}}{c}\right)^{2}}
 	return exp(-((((h - h_min) - (h_max - h_min)/2)/smooth) ** 2))
+	
+func generate_noise_map(map, noise_type, fractal_octaves, frequency, h_min, h_max, smooth, block_id, thresh):
+	
+	var noise = FastNoiseLite.new()
+	noise.seed = seed
+	noise.noise_type = noise_type
+	noise.fractal_octaves = fractal_octaves
+	noise.frequency = frequency
+	
+	# Force float calculations of weight
+	h_min = float(h_min)
+	
+	# Inefficient
+	for i in range(map_height):
+		for j in range(map_width):
+			if noise.get_noise_2d(i, j) * weight(j, h_min, h_max, smooth) > thresh and map[i][j] == 0:
+				map[i][j] = block_id
+				
+	return map
+	 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#var texture = NoiseTexture2D.new()
-	#texture.width = map_width
-	#texture.height = map_height
-	var noise = FastNoiseLite.new()
-	noise.seed = 12345
-	noise.noise_type = 1
-	noise.fractal_octaves = 3
-	noise.frequency = 0.02
-	
 	var map: Array[Array]
 	for i in range(map_width):
 		map.append([])
-		for j in range(map_width):
+		for j in range(map_height):
 			map[i].append(0)
 	
-	for i in range(map_width):
-		for j in range(3, map_height/1.5):
-			if noise.get_noise_2d(i, j) * weight(j, 3.0, map_height/1.5, 150) > 0.33:
-				map[i][j] = 1
-	 
+	print(map.size(), map[0].size())
+	map = generate_noise_map(map, 1, 3, 0.03, 3.0, map_height/2, 250, 1, 0.33)
+	map = generate_noise_map(map, 1, 5, 0.02, map_height/2, map_height, 250, 2, 0.4)
+	
 	# Cleaning function
 	for i in range(len(map)):
 		for j in range(len(map[0])):
@@ -52,8 +64,9 @@ func _ready():
 				else:
 					set_cell(Vector2i(i, j), 0, Vector2i(1, 3), 0)
 			elif map[i][j] == 1:
+				set_cell(Vector2i(i, j), 0, Vector2i(17, 3), 0)
+			elif map[i][j] == 2:
 				set_cell(Vector2i(i, j), 0, Vector2i(25, 3), 0)
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	pass

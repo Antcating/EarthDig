@@ -8,8 +8,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if Input.is_action_just_pressed("show_debug"):
-		print(get_visibility_layer())
+	if Input.is_action_just_released("show_debug"):
 		set_visibility_layer(!get_visibility_layer())
 	if get_visibility_layer():
 		set_text("FPS %d" % Engine.get_frames_per_second())

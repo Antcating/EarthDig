@@ -1,10 +1,10 @@
 [gd_scene load_steps=14 format=3 uid="uid://d1royap0untyy"]
 
-[ext_resource type="Script" path="res://scripts/fps.gd" id="1_58yla"]
+[ext_resource type="Script" path="res://Scripts/fps.gd" id="1_58yla"]
 [ext_resource type="Texture2D" uid="uid://cr1u088tqiotg" path="res://Assets/Sprites/Brown_Tile_Terrain (16 x 16).png" id="1_xoot3"]
 [ext_resource type="Script" path="res://Scripts/tile_map_layer.gd" id="2_gfeth"]
 [ext_resource type="Texture2D" uid="uid://drjrgqfxrejpe" path="res://icon.svg" id="3_lnda1"]
-[ext_resource type="Script" path="res://scripts/camera_2d.gd" id="4_7al6x"]
+[ext_resource type="Script" path="res://Scripts/camera_2d.gd" id="4_7al6x"]
 [ext_resource type="Texture2D" uid="uid://ca5gt4trh321v" path="res://Assets/UI/Outline.png" id="5_hyn57"]
 [ext_resource type="PackedScene" uid="uid://hdeg4u3nvdew" path="res://scenes/player.tscn" id="6_stqcy"]
 [ext_resource type="Script" path="res://Scripts/camera_2d_2.gd" id="7_3dlit"]

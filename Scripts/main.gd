@@ -1,7 +1,8 @@
 extends Node2D
 
-var map_height = 480
-var map_width = 120
+var chunk_size = 32
+var map_height = chunk_size * 10
+var map_width = chunk_size * 5
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

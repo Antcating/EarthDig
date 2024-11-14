@@ -77,19 +77,8 @@ func draw_map(chunk_pos):
 func _ready():
 	initialize_map()
 	map = generate_noise_map()
-	prev_chunk_pos = Vector2i(dev_camera.get_screen_center_position() / 16 / get_parent().chunk_size)
 	draw_map(prev_chunk_pos)
 
 # Process function to handle updates
 func _process(delta):
-	var current_chunk_pos = Vector2i(dev_camera.get_screen_center_position() / 16 / get_parent().chunk_size)
-	if prev_chunk_pos != current_chunk_pos:
-		prev_chunk_pos = current_chunk_pos
-
-	if Input.is_key_pressed(KEY_1):
-		for i in range(get_parent().map_width):
-			map[i][0] = 0
-			if i > 10 and i < 50:
-				set_cell(Vector2i(i, -1), 0, Vector2i(0, 1), 0)
-				set_cell(Vector2i(i, -2), 0, Vector2i(0, 1), 0)
-			set_cell(Vector2i(i, 0), 0, Vector2i(0, 1), 0)
+	pass

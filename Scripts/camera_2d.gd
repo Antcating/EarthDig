@@ -6,28 +6,33 @@ func _ready():
 
 
 const acc = 1000.0
+var mag_vel = 1000
 var vel = Vector2(0.0, 0.0)
 
 func _physics_process(delta):
 	
 	if Input.is_key_pressed(KEY_W):
-		vel[1] -= acc * delta / zoom.x
+		vel += Vector2(0, -acc * delta / zoom.y)
 		
 	if Input.is_key_pressed(KEY_S):
-		vel[1] += acc * delta / zoom.x
+		vel += Vector2(0, acc * delta / zoom.y)
 	
 	if Input.is_key_pressed(KEY_A):
-		vel[0] -= acc * delta / zoom.x
+		vel += Vector2(-acc * delta / zoom.x, 0)
 	
 	if Input.is_key_pressed(KEY_D):
-		vel[0] += acc * delta / zoom.x
-
-	vel[0] -= 0.2 * vel[0]
-	vel[1] -= 0.2 * vel[1]
+		vel += Vector2(acc * delta / zoom.x, 0)
 	
-	position.x += vel[0]
-	position.y += vel[1]
+	# Normalize the velocity vector
+	if vel.length() > mag_vel:
+		vel = vel.normalized() * mag_vel
+
+	# Move the camera
+	position += vel
 		
+	if vel != Vector2(0, 0):
+		vel[0] -= 0.2 * vel[0]
+		vel[1] -= 0.2 * vel[1]
 	
 func _input(event):
 	if event is InputEventMouseButton and event.is_pressed():

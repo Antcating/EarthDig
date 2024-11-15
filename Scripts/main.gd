@@ -1,22 +1,35 @@
 extends Node2D
 
-var chunk_size = 32
+# Graphics parameters
 var tile_size = 16
+# World parameters
+var chunk_size = 32
 var map_height = chunk_size * 20
 var map_width = chunk_size * 5
 
 @onready var tile_map : TileMapLayer = $MidLayer
 @onready var camera : Camera2D = $DevCamera
 
+# Get the noise textures from the editor
 @export var noise_iron: NoiseTexture2D
 @export var noise_gold: NoiseTexture2D
 @export var noise_cave: NoiseTexture2D
+# Noises
 var iron_noise : Noise
 var gold_noise : Noise
 var cave_noise : Noise
-# @onready var background = $ParallaxBackground/ParallaxLayer/Background
+# Map of the world
 var map: Array[Array]
-var prev_chunk_pos
+# Flag to check if the map is updated with autotiles
+var is_map_autotiled = false
+# Paint dictionary to store the changes
+var paints : Array[Dictionary]
+# Number of vertical chunks to process at a time
+var v_chunk_size = 5
+# Graphics vertical chunk id (for painting) 
+var v_chunk_id = 0
+# Changeset
+var change 
 
 # Weighting function for 1D depth based generation
 func weight(h, h_min, h_max, smooth):
@@ -39,58 +52,68 @@ func initialize_map():
 			map[i].append(1)
 
 # Draw the map based on the current chunk position
-func draw_map():
+func calculate_map():
 	var h_min_iron = 3.0
 	var h_min_gold: int = map_height/2
 	var h_max_iron: int = map_height/2
 	var h_max_gold: int = map_height
 
 	var is_specific_block : bool = false
-	for x in range(map_width):
-		for y in range(map_height):
+	var curr_v_chunk : int = -1
+	for y in range(map_height):
+		for x in range(map_width):
+			# Split the map in chunks of 5 vertical chunks (for painting)
+			if (y / chunk_size) / v_chunk_size != curr_v_chunk:
+				paints.append({})
+				curr_v_chunk = (y / chunk_size) / v_chunk_size
 			while not is_specific_block:
 				if iron_noise.get_noise_2d(x, y) * weight(y, h_min_iron, h_max_iron, 250) > 0.5:
 					map[x][y] = 2
 					BetterTerrain.set_cell(tile_map, Vector2i(x, y), 2)
+					paints[curr_v_chunk][Vector2i(x, y)] = 2
 					is_specific_block = true
 
 				if gold_noise.get_noise_2d(x, y) * weight(y, h_min_gold, h_max_gold, 250) > 0.3:
 					map[x][y] = 3
 					BetterTerrain.set_cell(tile_map, Vector2i(x, y), 3)
+					paints[curr_v_chunk][Vector2i(x, y)] = 3
 					is_specific_block = true
 
 				if cave_noise.get_noise_2d(x, y) > 0.6:
 					map[x][y] = 0
 					BetterTerrain.set_cell(tile_map, Vector2i(x, y), -1)
+					paints[curr_v_chunk][Vector2i(x, y)] = -1
 					is_specific_block = true
 
 				if not is_specific_block:
 					map[x][y] = 1
 					BetterTerrain.set_cell(tile_map, Vector2i(x, y), 1)
+					paints[curr_v_chunk][Vector2i(x, y)] = 1
 					is_specific_block = true
-
 			is_specific_block = false
 
-	BetterTerrain.update_terrain_area(tile_map, Rect2i(0, 0, map_width, map_height))
 func _ready():
+	# Initialize noise textures
 	iron_noise = noise_iron.noise
 	cave_noise = noise_cave.noise
 	gold_noise = noise_gold.noise
+	# Initialize empty arrays
 	initialize_map()
-	draw_map()
-
-# # Process function to handle updates
+	# Fill the map, graphics and paint dictionary
+	calculate_map()
+	change = BetterTerrain.create_terrain_changeset(tile_map, paints[v_chunk_id])
+# Process function to handle updates
 func _process(delta):
-	if Input.is_key_pressed(KEY_1):
-		var update_cells = []
-		for j in range(10):
-			for i in range(map_width):
-				if i > 10 and i < 50:
-					BetterTerrain.set_cell(tile_map, Vector2i(i, j), -1)
+	# Check if the map is autotiled
+	if not is_map_autotiled and BetterTerrain.is_terrain_changeset_ready(change):
+		print("Applying changeset")
+		BetterTerrain.apply_terrain_changeset(change)
+		v_chunk_id += 1
+		# Check if there are more vertical chunks to process
+		if v_chunk_id < paints.size():
+			change = BetterTerrain.create_terrain_changeset(tile_map, paints[v_chunk_id])
+		else:
+			is_map_autotiled = true
+			print("Map autotiled successfully")
 		
-		BetterTerrain.update_terrain_area(tile_map, Rect2i(0, 0, map_width, 10))
-
-	if Input.is_key_pressed(KEY_F9):
-		# Reset the map
-		initialize_map()
-		draw_map()
+	pass 

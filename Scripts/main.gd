@@ -8,7 +8,7 @@ var map_height = chunk_size * 20
 var map_width = chunk_size * 5
 
 @onready var tile_map : TileMapLayer = $MidLayer
-@onready var camera : Camera2D = $DevCamera
+# @onready var camera : Camera2D = $DevCamera
 
 # Get the noise textures from the editor
 @export var noise_iron: NoiseTexture2D
